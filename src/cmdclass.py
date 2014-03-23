@@ -22,7 +22,7 @@ class cmd_build(_build):
         print("UPDATING %s" % target_versionfile)
         os.unlink(target_versionfile)
         f = open(target_versionfile, "w")
-        f.write(SHORT_VERSION_PY % versions)
+        f.write(build_short_version_py(versions))
         f.close()
 
 if 'cx_Freeze' in sys.modules:  # cx_freeze enabled?
@@ -35,7 +35,7 @@ if 'cx_Freeze' in sys.modules:  # cx_freeze enabled?
             print("UPDATING %s" % target_versionfile)
             os.unlink(target_versionfile)
             f = open(target_versionfile, "w")
-            f.write(SHORT_VERSION_PY % versions)
+            f.write(build_short_version_py(versions))
             f.close()
             _build_exe.run(self)
             os.unlink(target_versionfile)
@@ -46,6 +46,7 @@ if 'cx_Freeze' in sys.modules:  # cx_freeze enabled?
                             "TAG_PREFIX": tag_prefix,
                             "PARENTDIR_PREFIX": parentdir_prefix,
                             "VERSIONFILE_SOURCE": versionfile_source,
+                            "VERSION_STRING_TEMPLATE": version_string_template,
                             })
             f.close()
 
@@ -54,7 +55,7 @@ class cmd_sdist(_sdist):
         versions = get_versions(verbose=True)
         self._versioneer_generated_versions = versions
         # unless we update this, the command will keep using the old version
-        self.distribution.metadata.version = versions["version"]
+        self.distribution.metadata.version = versions["describe"] # XXX
         return _sdist.run(self)
 
     def make_release_tree(self, base_dir, files):
@@ -65,12 +66,12 @@ class cmd_sdist(_sdist):
         print("UPDATING %s" % target_versionfile)
         os.unlink(target_versionfile)
         f = open(target_versionfile, "w")
-        f.write(SHORT_VERSION_PY % self._versioneer_generated_versions)
+        f.write(build_short_version_py(self._versioneer_generated_versions))
         f.close()
 
 INIT_PY_SNIPPET = """
 from ._version import get_versions
-__version__ = get_versions()['version']
+__version__ = get_versions()['default']
 del get_versions
 """
 
@@ -91,6 +92,7 @@ class cmd_update_files(Command):
                         "TAG_PREFIX": tag_prefix,
                         "PARENTDIR_PREFIX": parentdir_prefix,
                         "VERSIONFILE_SOURCE": versionfile_source,
+                        "VERSION_STRING_TEMPLATE": version_string_template,
                         })
         f.close()
 
