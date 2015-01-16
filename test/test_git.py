@@ -205,6 +205,15 @@ class Repo(unittest.TestCase):
         short = "1.0.post0.dev1+g%s" % full[:7]
         self.do_checks(short, full, dirty=False, state="SC")
 
+        # Dirty the tree again
+        f = open(self.subpath("demoapp/setup.py"),"a")
+        f.write("# dirty again\n")
+        f.close()
+        full = self.git("rev-parse", "HEAD")
+        short = "1.0.post0.dev1+g%s.dirty" % full[:7]
+        self.do_checks(short, full+"-dirty",
+                       dirty=True, state="SB")
+
 
     def do_checks(self, exp_short, exp_long, dirty, state):
         if os.path.exists(self.subpath("out")):

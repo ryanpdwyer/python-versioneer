@@ -63,25 +63,31 @@ def get_version(verbose=False):
 
 
 def git2pep440(ver_str):
-    try:
-        ver_parts = ver_str.split('-', 2)
-        if len(ver_parts) == 1:
-            return ver_parts[0]
-        elif len(ver_parts) == 2:
-            commits = 0
-        elif len(ver_parts) == 3:
-            commits = ver_parts[1]
-
-        tag = ver_parts[0]
-        hash_dirty = ver_parts[-1]
-
-        return "{tag}.{release_type_string}{commits}+{hash_dirty}".format(
-            tag=tag,
-            release_type_string=release_type_string,
-            commits=commits,
-            hash_dirty=hash_dirty)
-    except ValueError:
+    ver_parts = ver_str.split('-')
+    tag = ver_parts[0]
+    if len(ver_parts) == 1:
+        return tag
+    elif len(ver_parts) == 2:
+        commits = 0
+        git_hash = ''
+        dirty = 'dirty'
+    elif len(ver_parts) == 3:
+        commits = ver_parts[1]
+        git_hash = ver_parts[2]
+    elif len(ver_parts) == 4:
+        commits = ver_parts[1]
+        git_hash = ver_parts[2]
+        dirty = '.dirty'
+    else:
+        raise Warning("git version string could not be parsed.")
         return ver_str
+
+    return "{tag}.{release_type_string}{commits}+{githash}{dirty}".format(
+        tag=tag,
+        release_type_string=release_type_string,
+        commits=commits,
+        git_hash=git_hash,
+        dirty=dirty)
 
 
 def rep_by_pep440(ver):
