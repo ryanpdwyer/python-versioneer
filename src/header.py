@@ -17,7 +17,7 @@ versionfile_build = None
 tag_prefix = None
 parentdir_prefix = None
 VCS = None
-release_type_string = "post.dev"
+release_type_string = "post0.dev"
 
 # these dictionaries contain VCS-specific tools
 LONG_VERSION_PY = {}
