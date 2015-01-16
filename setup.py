@@ -43,8 +43,10 @@ def get(fn, add_ver=False, unquote=False, do_strip=False, do_readme=False):
         text = text.replace("@README@", get("README.md"))
     return text
 
+
 def u(s): # so u("foo") yields unicode on all of py2.6/py2.7/py3.2/py3.3
     return s.encode("ascii").decode("ascii")
+
 
 def get_vcs_list():
     project_path = path.join(path.abspath(path.dirname(__file__)), 'src')
@@ -52,6 +54,7 @@ def get_vcs_list():
             for filename
             in os.listdir(project_path)
             if path.isdir(path.join(project_path, filename))]
+
 
 def generate_versioneer():
     s = io.StringIO()
@@ -87,23 +90,30 @@ class make_versioneer(Command):
     description = "create standalone versioneer.py"
     user_options = []
     boolean_options = []
+
     def initialize_options(self):
         pass
+
     def finalize_options(self):
         pass
+
     def run(self):
         with open("versioneer.py", "w") as f:
             f.write(generate_versioneer().decode("utf8"))
         return 0
 
+
 class make_long_version_py_git(Command):
     description = "create standalone _version.py (for git)"
     user_options = []
     boolean_options = []
+
     def initialize_options(self):
         pass
+
     def finalize_options(self):
         pass
+
     def run(self):
         assert os.path.exists("versioneer.py")
         from versioneer import LONG_VERSION_PY
@@ -115,6 +125,7 @@ class make_long_version_py_git(Command):
                      "VERSIONFILE_SOURCE": "versionfile_source",
                      })
         return 0
+
 
 class my_build_scripts(build_scripts):
     def run(self):
@@ -138,11 +149,13 @@ class my_build_scripts(build_scripts):
         os.rmdir(tempdir)
         return rc
 
+
 # python's distutils treats module-less packages as binary-specific (not
 # "pure"), so "setup.py bdist_wheel" creates binary-specific wheels. Override
 # this so we get cross-platform wheels instead. More info at:
 # https://bitbucket.org/pypa/wheel/issue/116/packages-with-only-filesdata_files-get
 class Distribution(_Distribution):
+
     def is_pure(self): return True
 
 setup(
