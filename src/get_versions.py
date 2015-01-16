@@ -36,36 +36,24 @@ def get_versions(default=DEFAULT, verbose=False):
         ver = versions_from_keywords_f(vcs_keywords, tag_prefix)
         if ver:
             if verbose: print("got version from expanded keyword %s" % ver)
-            if not pep440_compliant:
-                return ver
-            else:
-                return rep_by_pep440(ver)
+            return rep_by_pep440(ver)
 
     ver = versions_from_file(versionfile_abs)
     if ver:
         if verbose: print("got version from file %s %s" % (versionfile_abs,ver))
-        if not pep440_compliant:
-            return ver
-        else:
-            return rep_by_pep440(ver)
+        return rep_by_pep440(ver)
 
     versions_from_vcs_f = vcs_function(VCS, "versions_from_vcs")
     if versions_from_vcs_f:
         ver = versions_from_vcs_f(tag_prefix, root, verbose)
         if ver:
             if verbose: print("got version from VCS %s" % ver)
-            if not pep440_compliant:
-                return ver
-            else:
-                return rep_by_pep440(ver)
+             return rep_by_pep440(ver)
 
     ver = versions_from_parentdir(parentdir_prefix, root, verbose)
     if ver:
         if verbose: print("got version from parentdir %s" % ver)
-        if not pep440_compliant:
-            return ver
-        else:
-            return rep_by_pep440(ver)
+         return rep_by_pep440(ver)
 
     if verbose: print("got version from default %s" % default)
     return default
@@ -76,8 +64,15 @@ def get_version(verbose=False):
 
 def git2pep440(ver_str):
     try:
-        tag, commits, _ = ver_str.split('-', 2)
-        return "{}.{}{}".format(tag, release_type_string, commits)
+        ver_parts = ver_str.split('-', 2)
+        tag = ver_parts[0]
+        hash_dirty = ver_parts[-1]
+        if len(ver_parts) == 3:
+            commits = ver_parts[1]
+        else:
+            commits = 0
+
+        return "{tag}.{release_type_string}{commits}+{hash_dirty}".format(tag, release_type_string, commits, rest)
     except ValueError:
         return ver_str
 
