@@ -2,4 +2,4 @@ Todo
 ====
 
 - [ ] Update documenation
-- [ ] Add an option to change the revision string?
+- [ ] Check PEP440 compatibility using `packaging`
