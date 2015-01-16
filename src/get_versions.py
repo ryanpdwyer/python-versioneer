@@ -82,7 +82,7 @@ def git2pep440(ver_str):
         raise Warning("git version string could not be parsed.")
         return ver_str
 
-    return "{tag}.{release_type_string}{commits}+{githash}{dirty}".format(
+    return "{tag}.{release_type_string}{commits}+{git_hash}{dirty}".format(
         tag=tag,
         release_type_string=release_type_string,
         commits=commits,
