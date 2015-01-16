@@ -72,7 +72,11 @@ def git2pep440(ver_str):
         else:
             commits = 0
 
-        return "{tag}.{release_type_string}{commits}+{hash_dirty}".format(tag, release_type_string, commits, rest)
+        return "{tag}.{release_type_string}{commits}+{hash_dirty}".format(
+            tag=tag,
+            release_type_string=release_type_string,
+            commits=commits,
+            hash_dirty=hash_dirty)
     except ValueError:
         return ver_str
 
