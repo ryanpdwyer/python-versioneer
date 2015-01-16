@@ -13,7 +13,7 @@ version-control system about the current tree.
 """
 
 # as nice as it'd be to versioneer ourselves, that sounds messy.
-VERSION = "1.0"
+VERSION = "1.0.1"
 
 
 def ver(s):

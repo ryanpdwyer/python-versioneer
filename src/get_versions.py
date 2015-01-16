@@ -48,12 +48,12 @@ def get_versions(default=DEFAULT, verbose=False):
         ver = versions_from_vcs_f(tag_prefix, root, verbose)
         if ver:
             if verbose: print("got version from VCS %s" % ver)
-             return rep_by_pep440(ver)
+            return rep_by_pep440(ver)
 
     ver = versions_from_parentdir(parentdir_prefix, root, verbose)
     if ver:
         if verbose: print("got version from parentdir %s" % ver)
-         return rep_by_pep440(ver)
+        return rep_by_pep440(ver)
 
     if verbose: print("got version from default %s" % default)
     return default
